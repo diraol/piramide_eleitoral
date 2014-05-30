@@ -20,7 +20,7 @@ var svg = d3.select("#infografico").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + 2*margin.left + "," + margin.top + ")");
 
 // A sliding container to hold the bars by birthyear.
 var birthyears = svg.append("g")
@@ -88,6 +88,15 @@ d3.csv("dados/population.csv", function(error, data) {
     .filter(function(value) { return !value; })
       .classed("zero", true);
 
+  // Add label to y axis
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "0em")
+    .style("text-anchor", "middle")
+    .text("População (em milhões)");
+
   // Add labeled rects for each birthyear (so that no enter or exit is required).
   var birthyear = birthyears.selectAll(".birthyear")
       .data(d3.range(year0 - age1, year1 + 1, 5))
@@ -106,13 +115,13 @@ d3.csv("dados/population.csv", function(error, data) {
       .attr("height", function(value) { return height - y(value); });
 
   // Add labels to show birthyear.
-  birthyear.append("text")
-      .attr("y", height - 4)
-      .text(function(birthyear) { return birthyear; });
+  //birthyear.append("text")
+      //.attr("y", height - 4)
+      //.text(function(birthyear) { return birthyear; });
 
   // Add label to show the percentage of each age group
   birthyear.append("text")
-      .attr("y", height - 14)
+      .attr("y", height - 6)
       .attr("class","percentage")
       .text(function(birthyear){
           if (perc_data[year][birthyear]) {
@@ -131,6 +140,13 @@ d3.csv("dados/population.csv", function(error, data) {
       .attr("y", height + 4)
     .attr("dy", ".71em")
     .text(function(age_label) { return age_label; });
+
+    // text label for the x axis
+    svg.append("text")
+        .attr("x", width/2 )
+        .attr("y", height + margin.top)
+        .style("text-anchor", "middle")
+        .text("Idade");
 
   // Allow the arrow keys to change the displayed year.
   window.focus();
