@@ -1,3 +1,14 @@
+function ageClass(year,indice){
+    // como nossas idades estão indo de 16 a 90,
+    // a 17 categoria é a de 70 anos.
+    var indice_base = 17;
+    var subtrator = (2060 - year)/5;
+    if (indice < indice_base - subtrator) {
+        return "facultativo";
+    } else {
+        return "obrigatorio";
+    }
+}
 var margin = {top: 20, right: 40, bottom: 30, left: 20},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
@@ -30,20 +41,8 @@ var birthyears = svg.append("g")
 var title = svg.append("text")
     .attr("class", "title")
     .attr("dy", ".71em")
-    .attr("transform", "translate(" + 2*width/3 + ",0)")
+    .attr("transform", "translate(" + width/2 + ",0)")
     .text(2060);
-
-function ageClass(year,indice){
-    // como nossas idades estão indo de 16 a 90,
-    // a 17 categoria é a de 70 anos.
-    var indice_base = 17;
-    var subtrator = (2060 - year)/5;
-    if (indice < indice_base - subtrator) {
-        return "facultativo";
-    } else {
-        return "obrigatorio";
-    }
-}
 
 d3.csv("dados/population.csv", function(error, data) {
 
@@ -157,9 +156,61 @@ d3.csv("dados/population.csv", function(error, data) {
     }
   });
 
+  var title_next = svg.append("text")
+      .attr("class", "title_next stroke-text")
+      .attr("dy", "1.9em")
+      .attr("transform", "translate(" + (width/2 - 80) + ",0)")
+      .text(2065);
+
+  var title_before = svg.append("text")
+      .attr("class", "title_before")
+      .attr("dy", "1.9em")
+      .attr("transform", "translate(" + (width/2 + 205) + ",0)")
+      .text(2055);
+
+  $("text.title_next").on('touchstart', function(e) {
+      e.preventDefault();
+      year = Math.min(year1, year + 5);
+      update();
+    }).on('touch', function(e) {
+      e.preventDefault();
+      year = Math.min(year1, year + 5);
+      update();
+    }).on('click', function(e) {
+      e.preventDefault();
+      year = Math.min(year1, year + 5);
+      update();
+    });
+
+  $("text.title_before").on('touchstart', function(e) {
+      e.preventDefault();
+      year = Math.max(year0, year - 5);
+      update();
+    }).on('touch', function(e) {
+      e.preventDefault();
+      year = Math.max(year0, year - 5);
+      update();
+    }).on('click', function(e) {
+      e.preventDefault();
+      year = Math.max(year0, year - 5);
+      update();
+    });
+
   function update() {
     if (!(year in people_data)) return;
     title.text(year);
+    title_next.text(year + 5);
+    title_before.text(year -5);
+    if (year == 2060) {
+        title_next.attr("class","title_next stroke-text");
+        title_before.attr("class","title_before");
+    } else if (year == 2000) {
+        title_before.attr("class","title_before stroke-text");
+        title_next.attr("class","title_next");
+    } else {
+        title_next.attr("class","title_next");
+        title_before.attr("class","title_before");
+    }
 
     birthyears.transition()
         .duration(750)

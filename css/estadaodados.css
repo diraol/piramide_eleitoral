@@ -108,6 +108,17 @@ svg {
   fill: #666;
 }
 
+.title_next,
+.title_before {
+  font: 300 30px Helvetica Neue;
+  fill: #999;
+}
+
+.title_next.stroke-text,
+.title_before.stroke-text {
+  fill: #ddd;
+}
+
 .birthyear,
 .age {
   text-anchor: middle;
