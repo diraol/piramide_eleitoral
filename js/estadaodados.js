@@ -63,7 +63,7 @@ d3.csv("dados/population.csv", function(error, data) {
 
   // Update the scale domains.
   x.domain([year1 - age0,year1 - age1]);
-  y.domain([0, d3.max(data, function(d) { return d.people; })]);
+  y.domain([0, 1.1*d3.max(data, function(d) { return d.people; })]);
 
   perc_data = d3.nest()
       .key(function(d){ return d.year; })
@@ -90,7 +90,7 @@ d3.csv("dados/population.csv", function(error, data) {
   // Add label to y axis
   svg.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left)
+    .attr("y", 0 - 1.5*margin.left)
     .attr("x",0 - (height / 2))
     .attr("dy", "0em")
     .style("text-anchor", "middle")
@@ -105,7 +105,7 @@ d3.csv("dados/population.csv", function(error, data) {
 
   // Building the bar for men and women
   birthyear.selectAll("rect")
-      .data(function(birthyear) { return people_data[year][birthyear] || [0, 0]; })
+      .data(function(birthyear) { return people_data[year][birthyear] || [0]; })
     .enter().append("rect")
       .attr("x", -barWidth / 2)
       .attr("width", barWidth)
@@ -124,7 +124,7 @@ d3.csv("dados/population.csv", function(error, data) {
       .attr("class","percentage")
       .text(function(birthyear){
           if (perc_data[year][birthyear]) {
-              return Math.round(perc_data[year][birthyear][0] + perc_data[year][birthyear][1]) + "%";
+              return Math.round(perc_data[year][birthyear][0]) + "%";
           } else {
             return "--";
           }
@@ -217,7 +217,7 @@ d3.csv("dados/population.csv", function(error, data) {
         .attr("transform", "translate(" + (x(year1) - x(year)) + ",0)");
 
     birthyear.selectAll("rect")
-        .data(function(birthyear) { return people_data[year][birthyear] || [0, 0]; })
+        .data(function(birthyear) { return people_data[year][birthyear] || [0]; })
       .transition()
         .duration(750)
         .attr("y", y)
@@ -227,7 +227,7 @@ d3.csv("dados/population.csv", function(error, data) {
     birthyear.selectAll(".percentage")
       .text(function(birthyear){
           if (perc_data[year][birthyear]) {
-              return Math.round(perc_data[year][birthyear][0] + perc_data[year][birthyear][1]) + "%";
+              return Math.round(perc_data[year][birthyear][0]) + "%";
           } else {
             return "--";
           }
